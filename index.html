@@ -1,337 +1,697 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Voice Translator</title>
+    <title>Voice Translator</title>
 
-<style>
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        font-family: Arial, sans-serif;
-    }
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
 
-    body {
-        min-height: 100vh;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-    }
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-    .container {
-        width: 100%;
-        max-width: 500px;
-        background: white;
-        padding: 30px;
-        border-radius: 25px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-        text-align: center;
-    }
+        .container {
+            width: 100%;
+            max-width: 520px;
+            background: white;
+            border-radius: 28px;
+            padding: 30px 25px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+            text-align: center;
+        }
 
-    h1 {
-        color: #333;
-        margin-bottom: 10px;
-    }
+        .title {
+            font-size: 42px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 8px;
+        }
 
-    .subtitle {
-        color: #777;
-        margin-bottom: 25px;
-    }
+        .subtitle {
+            font-size: 20px;
+            color: #777;
+            margin-bottom: 28px;
+        }
 
-    .language-buttons {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
-    }
+        .language-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
 
-    button {
-        border: none;
-        border-radius: 12px;
-        padding: 14px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: 0.2s;
-    }
+        .language-btn {
+            flex: 1;
+            border: none;
+            border-radius: 16px;
+            padding: 18px 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
 
-    button:hover {
-        transform: scale(1.03);
-    }
+        .language-btn:hover {
+            transform: scale(1.02);
+        }
 
-    .english {
-        background: #ffc800;
-        color: #222;
-        flex: 1;
-    }
+        .english-btn {
+            background: #ffc107;
+            color: #222;
+        }
 
-    .tamil {
-        background: #00c853;
-        color: white;
-        flex: 1;
-    }
+        .tamil-btn {
+            background: #00c853;
+            color: white;
+        }
 
-    .mic {
-        width: 100%;
-        background: #5e35b1;
-        color: white;
-        font-size: 18px;
-        margin-bottom: 20px;
-    }
+        .selected {
+            box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.15);
+        }
 
-    .mic:disabled {
-        background: #aaa;
-        cursor: not-allowed;
-    }
+        .mic-btn {
+            width: 100%;
+            border: none;
+            border-radius: 16px;
+            padding: 18px;
+            background: #673ab7;
+            color: white;
+            font-size: 22px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
 
-    .box {
-        background: #f5f5f5;
-        border-radius: 15px;
-        padding: 15px;
-        margin-top: 15px;
-        text-align: left;
-        min-height: 80px;
-    }
+        .mic-btn:disabled {
+            background: #999;
+            cursor: not-allowed;
+        }
 
-    .box-title {
-        font-weight: bold;
-        color: #555;
-        margin-bottom: 8px;
-    }
+        .box {
+            background: #f5f5f5;
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
 
-    #inputText, #outputText {
-        font-size: 18px;
-        color: #222;
-        word-wrap: break-word;
-    }
+        .box-title {
+            font-size: 19px;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 12px;
+        }
 
-    .speak {
-        width: 100%;
-        background: #2196f3;
-        color: white;
-        margin-top: 15px;
-    }
+        .text-content {
+            font-size: 21px;
+            line-height: 1.5;
+            color: #222;
+            min-height: 35px;
+            word-wrap: break-word;
+        }
 
-    .clear {
-        width: 100%;
-        background: #eeeeee;
-        color: #333;
-        margin-top: 10px;
-    }
+        .listen-btn {
+            width: 100%;
+            border: none;
+            border-radius: 16px;
+            padding: 17px;
+            background: #2196f3;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
 
-    #status {
-        margin-top: 15px;
-        color: #666;
-        font-size: 14px;
-    }
-</style>
+        .clear-btn {
+            width: 100%;
+            border: none;
+            border-radius: 16px;
+            padding: 17px;
+            background: #eeeeee;
+            color: #333;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .status {
+            margin-top: 18px;
+            font-size: 16px;
+            color: #666;
+            min-height: 22px;
+        }
+
+        @media (max-width: 450px) {
+
+            .container {
+                padding: 25px 18px;
+            }
+
+            .title {
+                font-size: 34px;
+            }
+
+            .subtitle {
+                font-size: 17px;
+            }
+
+            .language-container {
+                gap: 10px;
+            }
+
+            .language-btn {
+                font-size: 16px;
+                padding: 15px 8px;
+            }
+
+            .text-content {
+                font-size: 19px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <h1>🌐 Voice Translator</h1>
+        <h1 class="title">🌐 Voice Translator</h1>
 
-    <p class="subtitle">
-        English ↔ Tamil Voice Translator
-    </p>
+        <p class="subtitle">
+            English ↔ Tamil Voice Translator
+        </p>
 
-    <div class="language-buttons">
-        <button class="english" onclick="setLanguage('en')">
-            🇬🇧 English → Tamil
+
+        <!-- LANGUAGE SELECTION -->
+
+        <div class="language-container">
+
+            <button
+                id="englishBtn"
+                class="language-btn english-btn selected"
+                onclick="selectLanguage('en')">
+
+                🇬🇧 English →<br>
+                Tamil
+
+            </button>
+
+
+            <button
+                id="tamilBtn"
+                class="language-btn tamil-btn"
+                onclick="selectLanguage('ta')">
+
+                🇮🇳 Tamil →<br>
+                English
+
+            </button>
+
+        </div>
+
+
+        <!-- MICROPHONE -->
+
+        <button
+            id="micButton"
+            class="mic-btn"
+            onclick="startListening()">
+
+            🎤 Speak
+
         </button>
 
-        <button class="tamil" onclick="setLanguage('ta')">
-            🇮🇳 Tamil → English
+
+        <!-- INPUT -->
+
+        <div class="box">
+
+            <div class="box-title">
+                Your Speech
+            </div>
+
+            <div
+                id="inputText"
+                class="text-content">
+
+                Tap Speak and say something...
+
+            </div>
+
+        </div>
+
+
+        <!-- OUTPUT -->
+
+        <div class="box">
+
+            <div class="box-title">
+                Translation
+            </div>
+
+            <div
+                id="outputText"
+                class="text-content">
+
+                Translation will appear here...
+
+            </div>
+
+        </div>
+
+
+        <!-- SPEAK TRANSLATION -->
+
+        <button
+            class="listen-btn"
+            onclick="speakTranslation()">
+
+            🔊 Listen
+
         </button>
+
+
+        <!-- CLEAR -->
+
+        <button
+            class="clear-btn"
+            onclick="clearAll()">
+
+            🗑️ Clear
+
+        </button>
+
+
+        <!-- STATUS -->
+
+        <div
+            id="status"
+            class="status">
+
+        </div>
+
     </div>
 
-    <button class="mic" id="micButton" onclick="startListening()">
-        🎤 Speak
-    </button>
-
-    <div class="box">
-        <div class="box-title">Your Speech</div>
-        <div id="inputText">Tap Speak and say something...</div>
-    </div>
-
-    <div class="box">
-        <div class="box-title">Translation</div>
-        <div id="outputText">Translation will appear here...</div>
-    </div>
-
-    <button class="speak" onclick="speakTranslation()">
-        🔊 Listen
-    </button>
-
-    <button class="clear" onclick="clearAll()">
-        🗑️ Clear
-    </button>
-
-    <div id="status"></div>
-
-</div>
 
 <script>
 
-let selectedLanguage = "en";
-let translatedLanguage = "ta";
-let translatedText = "";
+    // --------------------------------
+    // VARIABLES
+    // --------------------------------
 
-function setLanguage(language) {
+    let selectedLanguage = "en";
 
-    selectedLanguage = language;
+    let translatedLanguage = "ta";
 
-    if (language === "en") {
-        translatedLanguage = "ta";
-        document.getElementById("status").innerText =
-            "English → Tamil selected";
-    } 
-    else {
-        translatedLanguage = "en";
-        document.getElementById("status").innerText =
-            "Tamil → English selected";
-    }
-}
-
-function startListening() {
-
-    const SpeechRecognition =
-        window.SpeechRecognition ||
-        window.webkitSpeechRecognition;
-
-    if (!SpeechRecognition) {
-        alert("Speech recognition is not supported in this browser.");
-        return;
-    }
-
-    const recognition = new SpeechRecognition();
-
-    recognition.lang =
-        selectedLanguage === "en"
-        ? "en-IN"
-        : "ta-IN";
-
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-
-    const micButton =
-        document.getElementById("micButton");
-
-    micButton.disabled = true;
-    micButton.innerText = "🎙️ Listening...";
-
-    document.getElementById("status").innerText =
-        "Listening... Please speak.";
-
-    recognition.start();
-
-    recognition.onresult = function(event) {
-
-        const text =
-            event.results[0][0].transcript;
-
-        document.getElementById("inputText").innerText = text;
-
-        translateText(text);
-    };
-
-    recognition.onerror = function(event) {
-
-        document.getElementById("status").innerText =
-            "Error: " + event.error;
-
-        micButton.disabled = false;
-        micButton.innerText = "🎤 Speak";
-    };
-
-    recognition.onend = function() {
-
-        micButton.disabled = false;
-        micButton.innerText = "🎤 Speak";
-    };
-}
+    let translatedText = "";
 
 
-async function translateText(text) {
+    // --------------------------------
+    // LANGUAGE SELECTION
+    // --------------------------------
 
-    document.getElementById("status").innerText =
-        "Translating...";
+    function selectLanguage(language) {
 
-    const from = selectedLanguage;
-    const to = translatedLanguage;
-
-    const url =
-        "https://api.mymemory.translated.net/get?q=" +
-        encodeURIComponent(text) +
-        "&langpair=" +
-        from + "|" + to;
-
-    try {
-
-        const response = await fetch(url);
-
-        const data = await response.json();
-
-        translatedText =
-            data.responseData.translatedText;
-
-        document.getElementById("outputText").innerText =
-            translatedText;
-
-        document.getElementById("status").innerText =
-            "Translation completed ✓";
-
-    } catch (error) {
-
-        document.getElementById("outputText").innerText =
-            "Translation failed.";
-
-        document.getElementById("status").innerText =
-            "Please check your internet connection.";
-    }
-}
+        selectedLanguage = language;
 
 
-function speakTranslation() {
+        if (language === "en") {
 
-    if (translatedText === "") {
-        alert("No translation available.");
-        return;
+            translatedLanguage = "ta";
+
+            document
+                .getElementById("englishBtn")
+                .classList.add("selected");
+
+            document
+                .getElementById("tamilBtn")
+                .classList.remove("selected");
+
+            document.getElementById("status").innerText =
+                "English → Tamil selected";
+
+        }
+
+        else {
+
+            translatedLanguage = "en";
+
+            document
+                .getElementById("tamilBtn")
+                .classList.add("selected");
+
+            document
+                .getElementById("englishBtn")
+                .classList.remove("selected");
+
+            document.getElementById("status").innerText =
+                "Tamil → English selected";
+        }
     }
 
-    const speech =
-        new SpeechSynthesisUtterance(translatedText);
 
-    speech.lang =
-        translatedLanguage === "ta"
-        ? "ta-IN"
-        : "en-IN";
+    // --------------------------------
+    // VOICE RECOGNITION
+    // --------------------------------
 
-    speech.rate = 0.9;
+    function startListening() {
 
-    window.speechSynthesis.speak(speech);
-}
+        const SpeechRecognition =
+            window.SpeechRecognition ||
+            window.webkitSpeechRecognition;
 
 
-function clearAll() {
+        if (!SpeechRecognition) {
 
-    document.getElementById("inputText").innerText =
-        "Tap Speak and say something...";
+            alert(
+                "Voice recognition is not supported in this browser. Please use Google Chrome."
+            );
 
-    document.getElementById("outputText").innerText =
-        "Translation will appear here...";
+            return;
+        }
 
-    document.getElementById("status").innerText = "";
 
-    translatedText = "";
+        const recognition =
+            new SpeechRecognition();
 
-    window.speechSynthesis.cancel();
-}
+
+        // Language for microphone
+
+        if (selectedLanguage === "en") {
+
+            recognition.lang = "en-IN";
+
+        }
+
+        else {
+
+            recognition.lang = "ta-IN";
+
+        }
+
+
+        recognition.interimResults = false;
+
+        recognition.maxAlternatives = 1;
+
+
+        const micButton =
+            document.getElementById("micButton");
+
+
+        micButton.disabled = true;
+
+        micButton.innerText =
+            "🎙️ Listening...";
+
+
+        document.getElementById("status").innerText =
+            "Listening... Please speak.";
+
+
+        try {
+
+            recognition.start();
+
+        }
+
+        catch (error) {
+
+            console.log(error);
+
+        }
+
+
+        // --------------------------------
+        // SPEECH RESULT
+        // --------------------------------
+
+        recognition.onresult = function(event) {
+
+            const text =
+                event.results[0][0].transcript;
+
+
+            document.getElementById("inputText").innerText =
+                text;
+
+
+            translateText(text);
+        };
+
+
+        // --------------------------------
+        // ERROR
+        // --------------------------------
+
+        recognition.onerror = function(event) {
+
+            console.log(event.error);
+
+
+            document.getElementById("status").innerText =
+                "Microphone error: " + event.error;
+
+
+            micButton.disabled = false;
+
+            micButton.innerText =
+                "🎤 Speak";
+        };
+
+
+        // --------------------------------
+        // END
+        // --------------------------------
+
+        recognition.onend = function() {
+
+            micButton.disabled = false;
+
+            micButton.innerText =
+                "🎤 Speak";
+        };
+    }
+
+
+    // --------------------------------
+    // TRANSLATION
+    // --------------------------------
+
+    async function translateText(text) {
+
+        if (!text || text.trim() === "") {
+
+            return;
+        }
+
+
+        document.getElementById("status").innerText =
+            "Translating...";
+
+
+        const from =
+            selectedLanguage;
+
+
+        const to =
+            translatedLanguage;
+
+
+        try {
+
+            /*
+             Google Translate public endpoint
+             */
+
+            const url =
+                "https://translate.googleapis.com/translate_a/single" +
+                "?client=gtx" +
+                "&sl=" + encodeURIComponent(from) +
+                "&tl=" + encodeURIComponent(to) +
+                "&dt=t" +
+                "&q=" + encodeURIComponent(text);
+
+
+            const response =
+                await fetch(url);
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Translation request failed"
+                );
+            }
+
+
+            const data =
+                await response.json();
+
+
+            let result = "";
+
+
+            if (
+                data &&
+                data[0]
+            ) {
+
+                for (
+                    let i = 0;
+                    i < data[0].length;
+                    i++
+                ) {
+
+                    if (data[0][i][0]) {
+
+                        result +=
+                            data[0][i][0];
+                    }
+                }
+            }
+
+
+            if (
+                !result ||
+                result.trim() === ""
+            ) {
+
+                throw new Error(
+                    "Empty translation"
+                );
+            }
+
+
+            translatedText =
+                result;
+
+
+            document
+                .getElementById("outputText")
+                .innerText =
+                translatedText;
+
+
+            document
+                .getElementById("status")
+                .innerText =
+                "Translation completed ✓";
+
+        }
+
+
+        catch (error) {
+
+            console.error(error);
+
+
+            document
+                .getElementById("outputText")
+                .innerText =
+                "Translation failed.";
+
+
+            document
+                .getElementById("status")
+                .innerText =
+                "Please check your internet connection.";
+        }
+    }
+
+
+    // --------------------------------
+    // TEXT TO SPEECH
+    // --------------------------------
+
+    function speakTranslation() {
+
+        if (
+            !translatedText ||
+            translatedText.trim() === ""
+        ) {
+
+            alert(
+                "There is no translation to speak."
+            );
+
+            return;
+        }
+
+
+        // Stop previous speech
+
+        window.speechSynthesis.cancel();
+
+
+        const speech =
+            new SpeechSynthesisUtterance(
+                translatedText
+            );
+
+
+        if (translatedLanguage === "ta") {
+
+            speech.lang = "ta-IN";
+
+        }
+
+        else {
+
+            speech.lang = "en-IN";
+
+        }
+
+
+        speech.rate = 0.9;
+
+        speech.pitch = 1;
+
+
+        window.speechSynthesis.speak(
+            speech
+        );
+    }
+
+
+    // --------------------------------
+    // CLEAR
+    // --------------------------------
+
+    function clearAll() {
+
+        document
+            .getElementById("inputText")
+            .innerText =
+            "Tap Speak and say something...";
+
+
+        document
+            .getElementById("outputText")
+            .innerText =
+            "Translation will appear here...";
+
+
+        document
+            .getElementById("status")
+            .innerText = "";
+
+
+        translatedText = "";
+
+
+        window.speechSynthesis.cancel();
+    }
+
 
 </script>
 
