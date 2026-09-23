@@ -1,273 +1,336 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Translator</title>
+<title>Voice Translator</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
 
-        body {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+    body {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
 
-        .container {
-            width: 100%;
-            max-width: 700px;
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
+    .container {
+        width: 100%;
+        max-width: 500px;
+        background: white;
+        padding: 30px;
+        border-radius: 25px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        text-align: center;
+    }
 
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 10px;
-        }
+    h1 {
+        color: #333;
+        margin-bottom: 10px;
+    }
 
-        .subtitle {
-            text-align: center;
-            color: #777;
-            margin-bottom: 25px;
-        }
+    .subtitle {
+        color: #777;
+        margin-bottom: 25px;
+    }
 
-        .language-box {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
+    .language-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
 
-        .language-box div {
-            flex: 1;
-        }
+    button {
+        border: none;
+        border-radius: 12px;
+        padding: 14px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
 
-        label {
-            display: block;
-            margin-bottom: 7px;
-            font-weight: bold;
-            color: #444;
-        }
+    button:hover {
+        transform: scale(1.03);
+    }
 
-        select,
-        textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            font-size: 16px;
-            outline: none;
-        }
+    .english {
+        background: #ffc800;
+        color: #222;
+        flex: 1;
+    }
 
-        select:focus,
-        textarea:focus {
-            border-color: #667eea;
-        }
+    .tamil {
+        background: #00c853;
+        color: white;
+        flex: 1;
+    }
 
-        textarea {
-            height: 130px;
-            resize: vertical;
-            margin-bottom: 15px;
-        }
+    .mic {
+        width: 100%;
+        background: #5e35b1;
+        color: white;
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
 
-        button {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            background: #667eea;
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+    .mic:disabled {
+        background: #aaa;
+        cursor: not-allowed;
+    }
 
-        button:hover {
-            background: #5568d9;
-        }
+    .box {
+        background: #f5f5f5;
+        border-radius: 15px;
+        padding: 15px;
+        margin-top: 15px;
+        text-align: left;
+        min-height: 80px;
+    }
 
-        .clear-btn {
-            margin-top: 10px;
-            background: #555;
-        }
+    .box-title {
+        font-weight: bold;
+        color: #555;
+        margin-bottom: 8px;
+    }
 
-        .clear-btn:hover {
-            background: #333;
-        }
+    #inputText, #outputText {
+        font-size: 18px;
+        color: #222;
+        word-wrap: break-word;
+    }
 
-        #result {
-            margin-top: 20px;
-            padding: 15px;
-            min-height: 80px;
-            background: #f5f5f5;
-            border-radius: 10px;
-            color: #333;
-            font-size: 17px;
-            line-height: 1.5;
-        }
+    .speak {
+        width: 100%;
+        background: #2196f3;
+        color: white;
+        margin-top: 15px;
+    }
 
-        .loading {
-            color: #667eea;
-        }
+    .clear {
+        width: 100%;
+        background: #eeeeee;
+        color: #333;
+        margin-top: 10px;
+    }
 
-        @media (max-width: 600px) {
-            .language-box {
-                flex-direction: column;
-            }
-
-            .container {
-                padding: 20px;
-            }
-        }
-    </style>
+    #status {
+        margin-top: 15px;
+        color: #666;
+        font-size: 14px;
+    }
+</style>
 </head>
 
 <body>
 
 <div class="container">
 
-    <h1>🌐 Translator</h1>
+    <h1>🌐 Voice Translator</h1>
 
     <p class="subtitle">
-        Translate text easily between different languages
+        English ↔ Tamil Voice Translator
     </p>
 
-    <div class="language-box">
+    <div class="language-buttons">
+        <button class="english" onclick="setLanguage('en')">
+            🇬🇧 English → Tamil
+        </button>
 
-        <div>
-            <label>From Language</label>
-
-            <select id="fromLanguage">
-                <option value="en">English</option>
-                <option value="ta">Tamil</option>
-                <option value="hi">Hindi</option>
-                <option value="ml">Malayalam</option>
-                <option value="te">Telugu</option>
-                <option value="kn">Kannada</option>
-                <option value="fr">French</option>
-                <option value="de">German</option>
-                <option value="es">Spanish</option>
-            </select>
-        </div>
-
-        <div>
-            <label>To Language</label>
-
-            <select id="toLanguage">
-                <option value="ta">Tamil</option>
-                <option value="en">English</option>
-                <option value="hi">Hindi</option>
-                <option value="ml">Malayalam</option>
-                <option value="te">Telugu</option>
-                <option value="kn">Kannada</option>
-                <option value="fr">French</option>
-                <option value="de">German</option>
-                <option value="es">Spanish</option>
-            </select>
-        </div>
-
+        <button class="tamil" onclick="setLanguage('ta')">
+            🇮🇳 Tamil → English
+        </button>
     </div>
 
-    <label>Enter Text</label>
-
-    <textarea
-        id="inputText"
-        placeholder="Type your text here..."
-    ></textarea>
-
-    <button onclick="translateText()">
-        Translate
+    <button class="mic" id="micButton" onclick="startListening()">
+        🎤 Speak
     </button>
 
-    <div id="result">
-        Translation will appear here...
+    <div class="box">
+        <div class="box-title">Your Speech</div>
+        <div id="inputText">Tap Speak and say something...</div>
     </div>
 
-    <button class="clear-btn" onclick="clearText()">
-        Clear
+    <div class="box">
+        <div class="box-title">Translation</div>
+        <div id="outputText">Translation will appear here...</div>
+    </div>
+
+    <button class="speak" onclick="speakTranslation()">
+        🔊 Listen
     </button>
+
+    <button class="clear" onclick="clearAll()">
+        🗑️ Clear
+    </button>
+
+    <div id="status"></div>
 
 </div>
 
 <script>
 
-async function translateText() {
+let selectedLanguage = "en";
+let translatedLanguage = "ta";
+let translatedText = "";
 
-    const text = document.getElementById("inputText").value.trim();
+function setLanguage(language) {
 
-    const from = document.getElementById("fromLanguage").value;
+    selectedLanguage = language;
 
-    const to = document.getElementById("toLanguage").value;
+    if (language === "en") {
+        translatedLanguage = "ta";
+        document.getElementById("status").innerText =
+            "English → Tamil selected";
+    } 
+    else {
+        translatedLanguage = "en";
+        document.getElementById("status").innerText =
+            "Tamil → English selected";
+    }
+}
 
-    const result = document.getElementById("result");
+function startListening() {
 
-    if (text === "") {
-        result.innerHTML = "Please enter some text.";
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        alert("Speech recognition is not supported in this browser.");
         return;
     }
 
-    if (from === to) {
-        result.innerHTML = text;
-        return;
-    }
+    const recognition = new SpeechRecognition();
 
-    result.innerHTML =
-        "<span class='loading'>Translating...</span>";
+    recognition.lang =
+        selectedLanguage === "en"
+        ? "en-IN"
+        : "ta-IN";
+
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    const micButton =
+        document.getElementById("micButton");
+
+    micButton.disabled = true;
+    micButton.innerText = "🎙️ Listening...";
+
+    document.getElementById("status").innerText =
+        "Listening... Please speak.";
+
+    recognition.start();
+
+    recognition.onresult = function(event) {
+
+        const text =
+            event.results[0][0].transcript;
+
+        document.getElementById("inputText").innerText = text;
+
+        translateText(text);
+    };
+
+    recognition.onerror = function(event) {
+
+        document.getElementById("status").innerText =
+            "Error: " + event.error;
+
+        micButton.disabled = false;
+        micButton.innerText = "🎤 Speak";
+    };
+
+    recognition.onend = function() {
+
+        micButton.disabled = false;
+        micButton.innerText = "🎤 Speak";
+    };
+}
+
+
+async function translateText(text) {
+
+    document.getElementById("status").innerText =
+        "Translating...";
+
+    const from = selectedLanguage;
+    const to = translatedLanguage;
+
+    const url =
+        "https://api.mymemory.translated.net/get?q=" +
+        encodeURIComponent(text) +
+        "&langpair=" +
+        from + "|" + to;
 
     try {
-
-        const url =
-            "https://api.mymemory.translated.net/get?q=" +
-            encodeURIComponent(text) +
-            "&langpair=" +
-            from +
-            "|" +
-            to;
 
         const response = await fetch(url);
 
         const data = await response.json();
 
-        if (data.responseData &&
-            data.responseData.translatedText) {
+        translatedText =
+            data.responseData.translatedText;
 
-            result.innerHTML =
-                data.responseData.translatedText;
+        document.getElementById("outputText").innerText =
+            translatedText;
 
-        } else {
-
-            result.innerHTML =
-                "Translation could not be completed.";
-
-        }
+        document.getElementById("status").innerText =
+            "Translation completed ✓";
 
     } catch (error) {
 
-        result.innerHTML =
-            "Unable to connect to the translation service.";
+        document.getElementById("outputText").innerText =
+            "Translation failed.";
 
+        document.getElementById("status").innerText =
+            "Please check your internet connection.";
     }
 }
 
 
-function clearText() {
+function speakTranslation() {
 
-    document.getElementById("inputText").value = "";
+    if (translatedText === "") {
+        alert("No translation available.");
+        return;
+    }
 
-    document.getElementById("result").innerHTML =
+    const speech =
+        new SpeechSynthesisUtterance(translatedText);
+
+    speech.lang =
+        translatedLanguage === "ta"
+        ? "ta-IN"
+        : "en-IN";
+
+    speech.rate = 0.9;
+
+    window.speechSynthesis.speak(speech);
+}
+
+
+function clearAll() {
+
+    document.getElementById("inputText").innerText =
+        "Tap Speak and say something...";
+
+    document.getElementById("outputText").innerText =
         "Translation will appear here...";
+
+    document.getElementById("status").innerText = "";
+
+    translatedText = "";
+
+    window.speechSynthesis.cancel();
 }
 
 </script>
