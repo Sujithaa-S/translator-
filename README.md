@@ -1,10 +1,16 @@
 # 🌐 Voice Translator
 
-A simple and user-friendly **English ↔ Tamil Voice Translator** website.
+A simple and user-friendly **English ↔ Tamil Voice Translator** application and website that helps users translate speech between English and Tamil.
 
-## 🚀 Live Website
+## 🌐 Live Website
 
-https://sujithaa-s.github.io/translator-/
+[🔗 Open Voice Translator Website](https://sujithaa-s.github.io/translator-/)
+
+## 📥 Download the App
+
+The Android application is available as an APK file.
+
+[⬇️ Download Voice Translator APK](./Translator.apk)
 
 ## ✨ Features
 
@@ -13,34 +19,24 @@ https://sujithaa-s.github.io/translator-/
 - 🇮🇳 Tamil → English translation
 - 🔊 Listen to translated text
 - 🗑️ Clear input and translation
-- 📱 Mobile-friendly design
-- 🌐 Works directly in a web browser
+- 📱 Mobile-friendly interface
+- 🌐 Web-based translation
+- ⚡ Simple and easy-to-use interface
 
-## 🛠️ Technologies Used
+## 🖥️ Website Preview
 
-- HTML
-- CSS
-- JavaScript
-- Web Speech API
-- Google Translate translation service
+The website provides a clean and simple interface for English and Tamil voice translation.
 
-## 📖 How to Use
+<!-- Add your website screenshot here -->
 
-1. Open the Voice Translator website.
-2. Select **English → Tamil** or **Tamil → English**.
-3. Click the **🎤 Speak** button.
-4. Speak clearly into the microphone.
-5. The translated text will appear automatically.
-6. Click **🔊 Listen** to hear the translation.
+![Voice Translator Website Preview](screenshot.png)
 
-## 🎯 Project Purpose
+## 📂 Project Structure
 
-The main purpose of this project is to provide a simple voice-based translation tool that helps users communicate between English and Tamil easily.
-
-## 👩‍💻 Developer
-
-**Sujithaa**
-
----
-
-⭐ Thank you for visiting my project!
+```text
+translator-/
+│
+├── index.html
+├── Translator.apk
+├── screenshot.png
+└── README.md
