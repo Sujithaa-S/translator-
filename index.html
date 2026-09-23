@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Translator</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        .language-box {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .language-box div {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #444;
+        }
+
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        select:focus,
+        textarea:focus {
+            border-color: #667eea;
+        }
+
+        textarea {
+            height: 130px;
+            resize: vertical;
+            margin-bottom: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #667eea;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #5568d9;
+        }
+
+        .clear-btn {
+            margin-top: 10px;
+            background: #555;
+        }
+
+        .clear-btn:hover {
+            background: #333;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            min-height: 80px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            color: #333;
+            font-size: 17px;
+            line-height: 1.5;
+        }
+
+        .loading {
+            color: #667eea;
+        }
+
+        @media (max-width: 600px) {
+            .language-box {
+                flex-direction: column;
+            }
+
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🌐 Translator</h1>
+
+    <p class="subtitle">
+        Translate text easily between different languages
+    </p>
+
+    <div class="language-box">
+
+        <div>
+            <label>From Language</label>
+
+            <select id="fromLanguage">
+                <option value="en">English</option>
+                <option value="ta">Tamil</option>
+                <option value="hi">Hindi</option>
+                <option value="ml">Malayalam</option>
+                <option value="te">Telugu</option>
+                <option value="kn">Kannada</option>
+                <option value="fr">French</option>
+                <option value="de">German</option>
+                <option value="es">Spanish</option>
+            </select>
+        </div>
+
+        <div>
+            <label>To Language</label>
+
+            <select id="toLanguage">
+                <option value="ta">Tamil</option>
+                <option value="en">English</option>
+                <option value="hi">Hindi</option>
+                <option value="ml">Malayalam</option>
+                <option value="te">Telugu</option>
+                <option value="kn">Kannada</option>
+                <option value="fr">French</option>
+                <option value="de">German</option>
+                <option value="es">Spanish</option>
+            </select>
+        </div>
+
+    </div>
+
+    <label>Enter Text</label>
+
+    <textarea
+        id="inputText"
+        placeholder="Type your text here..."
+    ></textarea>
+
+    <button onclick="translateText()">
+        Translate
+    </button>
+
+    <div id="result">
+        Translation will appear here...
+    </div>
+
+    <button class="clear-btn" onclick="clearText()">
+        Clear
+    </button>
+
+</div>
+
+<script>
+
+async function translateText() {
+
+    const text = document.getElementById("inputText").value.trim();
+
+    const from = document.getElementById("fromLanguage").value;
+
+    const to = document.getElementById("toLanguage").value;
+
+    const result = document.getElementById("result");
+
+    if (text === "") {
+        result.innerHTML = "Please enter some text.";
+        return;
+    }
+
+    if (from === to) {
+        result.innerHTML = text;
+        return;
+    }
+
+    result.innerHTML =
+        "<span class='loading'>Translating...</span>";
+
+    try {
+
+        const url =
+            "https://api.mymemory.translated.net/get?q=" +
+            encodeURIComponent(text) +
+            "&langpair=" +
+            from +
+            "|" +
+            to;
+
+        const response = await fetch(url);
+
+        const data = await response.json();
+
+        if (data.responseData &&
+            data.responseData.translatedText) {
+
+            result.innerHTML =
+                data.responseData.translatedText;
+
+        } else {
+
+            result.innerHTML =
+                "Translation could not be completed.";
+
+        }
+
+    } catch (error) {
+
+        result.innerHTML =
+            "Unable to connect to the translation service.";
+
+    }
+}
+
+
+function clearText() {
+
+    document.getElementById("inputText").value = "";
+
+    document.getElementById("result").innerHTML =
+        "Translation will appear here...";
+}
+
+</script>
+
+</body>
+</html>
